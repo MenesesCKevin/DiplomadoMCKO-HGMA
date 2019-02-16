@@ -11,9 +11,9 @@ void adelante(){
   digitalWrite(izq2, HIGH);
   digitalWrite(der1, HIGH);
   digitalWrite(der2, LOW);
-  for(int i=0; i<950; i++){
-    analogWrite(velIzq,70);
-    analogWrite(velDer,67);
+  for(int i=0; i<475; i++){
+    analogWrite(velIzq,75);
+    analogWrite(velDer,72);
     delay(1);
   }
 }
@@ -24,9 +24,9 @@ void Izq(){
   digitalWrite(der1, HIGH);
   digitalWrite(der2, LOW);
 
-  for(int i=0; i<700; i++){
-    analogWrite(velIzq,15);
-    analogWrite(velDer,30);
+  for(int i=0; i<650; i++){
+    analogWrite(velIzq,20);
+    analogWrite(velDer,36);
     delay(1);
   }
 }
@@ -50,11 +50,13 @@ void setup() {
 
   adelante();
   adelante();
+  adelante();
+  Izq();
   Izq();
   adelante();
   adelante();
-  Izq();
   adelante();
+  Izq();
   Detener();
 }
 
