@@ -35,6 +35,14 @@ void adelante(){
   velocidad_izq = 60;
   direccion_der = true;
   velocidad_der = 60;
+
+  digitalWrite(izq,direccion_izq);
+  analogWrite(velIzq,velocidad_izq);
+    
+  digitalWrite(der,direccion_der);
+  analogWrite(velDer,velocidad_der);
+  
+  delay(3000);
 }
 
 void atras(){
@@ -42,12 +50,26 @@ void atras(){
   velocidad_izq = 60;
   direccion_der = true;
   velocidad_der = 60;
+
+  digitalWrite(izq,direccion_izq);
+  analogWrite(velIzq,velocidad_izq);
+    
+  digitalWrite(der,direccion_der);
+  analogWrite(velDer,velocidad_der);
+
+  delay(3000);
 }
 
 
 void apagado(){
   velocidad_izq = 0;
   velocidad_der = 0;
+
+  digitalWrite(izq,direccion_izq);
+  analogWrite(velIzq,velocidad_izq);
+    
+  digitalWrite(der,direccion_der);
+  analogWrite(velDer,velocidad_der);
 }
 
 void giro_der(){
@@ -55,6 +77,14 @@ void giro_der(){
   direccion_izq = true;
   velocidad_izq = 50;
   velocidad_der = 50;
+  
+  digitalWrite(izq,direccion_izq);
+  analogWrite(velIzq,velocidad_izq);
+    
+  digitalWrite(der,direccion_der);
+  analogWrite(velDer,velocidad_der);
+  
+  delay(2000);
 
 }
 
@@ -63,6 +93,14 @@ void giro_izq(){
   direccion_izq = true;
   velocidad_izq = 50;
   velocidad_der = 50;
+
+  digitalWrite(izq,direccion_izq);
+  analogWrite(velIzq,velocidad_izq);
+    
+  digitalWrite(der,direccion_der);
+  analogWrite(velDer,velocidad_der);
+  
+  delay(2000);
 
 }
 
@@ -132,12 +170,4 @@ void loop(){
         giro_izq();
       }
     }
-
-    digitalWrite(izq,direccion_izq);
-    analogWrite(velIzq,velocidad_izq);
-    
-    digitalWrite(der,direccion_der);
-    analogWrite(velDer,velocidad_der);
-
-    delay(2000); //tiempo en que ejecuta cada estado
 }
