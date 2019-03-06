@@ -25,20 +25,18 @@ int velocidad_der = 0;
 //Cada una de las siguientes funciones corresponden a los movimientos del robot
 //Cada una recibe de argumento el tiempo en milisegundos que ejecutara dicha funcion
 
-void adelante(int tiempo){
+void adelante(){
   direccion_izq = true;
   velocidad_izq = 60;
   direccion_der = true;
   velocidad_der = 60;
-  delay(tiempo);
 }
 
-void atras(int tiempo){
+void atras(){
   direccion_izq = true;
   velocidad_izq = 60;
   direccion_der = true;
   velocidad_der = 60;
-  delay(tiempo);
 }
 
 
@@ -47,21 +45,19 @@ void apagado(){
   velocidad_der = 0;
 }
 
-void giro_der(int tiempo){
+void giro_der(){
   direccion_der = false;
   direccion_izq = true;
   velocidad_izq = 50;
   velocidad_der = 50;
-  delay(tiempo);
 
 }
 
-void giro_izq(int tiempo){
+void giro_izq(){
   direccion_der = false;
   direccion_izq = true;
   velocidad_izq = 50;
   velocidad_der = 50;
-  delay(tiempo);
 
 }
 
@@ -83,6 +79,7 @@ void loop(){
 
   velocidad_izq = 0;
   velocidad_der = 0;
+  
    while (Serial.available()) {
       char inChar = Serial.read();
       if(inChar != '\n'){
@@ -94,19 +91,19 @@ void loop(){
     }
     
    if (txtMsg == "adelante"){
-      adelante(2000);
+      adelante();
     }
    if (txtMsg == "atras"){
-      atras(2000);
+      atras();
     }
    if (txtMsg == "apagado"){
       apagado();
     }
    if (txtMsg == "izquierda"){
-      giro_izq(2000);
+      giro_izq();
     }
    if (txtMsg == "derecha"){
-      giro_der(2000);
+      giro_der();
     }
 
     digitalWrite(izq,direccion_izq);
@@ -114,4 +111,6 @@ void loop(){
     
     digitalWrite(der,direccion_der);
     analogWrite(velDer,velocidad_der);
+
+    delay(2000);  //tiempo que ejecuta las instrucciones
 }
