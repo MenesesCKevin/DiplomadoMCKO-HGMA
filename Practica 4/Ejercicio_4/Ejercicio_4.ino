@@ -4,7 +4,9 @@
 /************Meneses Cornejo Kevin Osmar***********************************/
 
 const int der = 13; //Pin hacia el control del motor derecho
+const int der1 = 8; //Pin hacia el control del motor derecho
 const int izq = 12; //Pin hacia el control del motor izquierdo
+const int izq1 = 9; //Pin hacia el control del motor derecho
 
 const int velDer = 10; //Pin hacia el habilitador del motor derecho
 const int velIzq = 11; //Pin hacia el habilitaror del motor izquierdo
@@ -23,12 +25,12 @@ int velocidad_der = 0;
 
 void izquierdo_left(){
   direccion_izq = true;
-  velocidad_izq = 70;
+  velocidad_izq = 90;
 }
 
 void izquierdo_right(){
   direccion_izq = false;
-  velocidad_izq = 70;
+  velocidad_izq = 90;
 }
 
 void izquierdo_off(){
@@ -38,12 +40,12 @@ void izquierdo_off(){
 
 void derecho_left(){
   direccion_der = true;
-  velocidad_der = 100;
+  velocidad_der = 90;
 }
 
 void derecho_right(){
   direccion_der = false;
-  velocidad_der = 100;
+  velocidad_der = 90;
 }
 
 void derecho_off(){
@@ -95,8 +97,10 @@ void loop(){
     }
 
     digitalWrite(izq,direccion_izq);
+    digitalWrite(izq1,!direccion_izq);
     analogWrite(velIzq,velocidad_izq);
     
     digitalWrite(der,direccion_der);
+    digitalWrite(der1,!direccion_der);
     analogWrite(velDer,velocidad_der);
 }
