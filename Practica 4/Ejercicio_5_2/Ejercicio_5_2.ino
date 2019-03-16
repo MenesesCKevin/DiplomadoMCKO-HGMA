@@ -23,44 +23,33 @@ int velocidad_der = 0;
 /************************************************************************/
 /***************************Bloque de funciones**************************/
 
-
-//Cada una de las siguientes funciones corresponden a los movimientos del robot
-//Cada una recibe de argumento el tiempo en milisegundos que ejecutara dicha funcion
-
-void adelante(){
+void izquierdo_left(){
   direccion_izq = true;
   velocidad_izq = 60;
-  direccion_der = true;
-  velocidad_der = 60;
 }
 
-void atras(){
-  direccion_izq = true;
+void izquierdo_right(){
+  direccion_izq = false;
   velocidad_izq = 60;
-  direccion_der = true;
-  velocidad_der = 60;
 }
 
-
-void apagado(){
+void izquierdo_off(){
   velocidad_izq = 0;
+}
+
+
+void derecho_left(){
+  direccion_der = true;
+  velocidad_der = 60;
+}
+
+void derecho_right(){
+  direccion_der = false;
+  velocidad_der = 60;
+}
+
+void derecho_off(){
   velocidad_der = 0;
-}
-
-void giro_der(){
-  direccion_der = false;
-  direccion_izq = true;
-  velocidad_izq = 40;
-  velocidad_der = 40;
-
-}
-
-void giro_izq(){
-  direccion_der = false;
-  direccion_izq = true;
-  velocidad_izq = 50;
-  velocidad_der = 50;
-
 }
 
 /************************************************************************/
@@ -80,7 +69,6 @@ void setup() {
 }
 
 void loop(){
-  
    while (Serial.available()) {
       char inChar = Serial.read();
       if(inChar != '\n'){
@@ -91,20 +79,25 @@ void loop(){
       }
     }
     
-   if (txtMsg == "adelante 1"){
-      adelante();
+   if (txtMsg == "adelante"){
+      izquierdo_right();
+      derecho_right();
     }
    if (txtMsg == "atras"){
-      atras();
+      izquierdo_left();
+      derecho_left();
+    }
+   if (txtMsg == "giro izq"){
+      izquierdo_right();
+      derecho_left();
+    }
+   if (txtMsg == "giro der"){
+      derecho_right();
+      izquierdo_left();
     }
    if (txtMsg == "apagado"){
-      apagado();
-    }
-   if (txtMsg == "izquierda"){
-      giro_izq();
-    }
-   if (txtMsg == "derecha"){
-      giro_der();
+      derecho_off();
+      izquierdo_off();
     }
 
     digitalWrite(izq,direccion_izq);
@@ -114,6 +107,4 @@ void loop(){
     digitalWrite(der,direccion_der);
     digitalWrite(der1,!direccion_der);
     analogWrite(velDer,velocidad_der);
-
-    delay(2000);  //tiempo que ejecuta las instrucciones
 }
