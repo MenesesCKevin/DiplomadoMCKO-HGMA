@@ -126,36 +126,23 @@ void setup() {
 }
 
 void loop() {
-  Serial.print("Right Count: ");
-  Serial.print(rightCount);
-  Serial.print("\tLeft Count: ");
-  Serial.println(leftCount);
-  Serial.println();
-  int sensorA = analogRead(A0);
-  int sensorB = analogRead(A1);
-  /*Serial.print(sensorA);
-  Serial.print(" \t");
-  Serial.println(sensorB);
-  delay(10);*/
-  
 
-  if (leftCount <= 270){
-   velocidad_izq = 65;
+
+   velocidad_izq = 45;
    direccion_izq =false;
    
-  }
-  else{
-     velocidad_izq=0;
-  }
-  
- if (rightCount <= 230){
    velocidad_der = 45;
    direccion_der = false;
-   
-  }
-  else{
-     velocidad_der=0;
-  }
+   delay(1);
+
+    Serial.print("Right Count: ");
+    Serial.print(rightCount);
+    Serial.print("\tLeft Count: ");
+    Serial.println(leftCount);
+    Serial.println();
+    
+   rightCount=0;
+   leftCount=0;
 
  digitalWrite(izq,direccion_izq);
  digitalWrite(izq1,!direccion_izq);
