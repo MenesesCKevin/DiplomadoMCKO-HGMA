@@ -1,2 +1,0 @@
-carrito_control:mobile_base:surge_et_ambula
--DCATKIN_DEVEL_PREFIX=/home/pi/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/pi/catkin_ws/install -G Unix Makefiles
