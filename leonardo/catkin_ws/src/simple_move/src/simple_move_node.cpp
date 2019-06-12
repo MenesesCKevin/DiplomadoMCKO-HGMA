@@ -20,6 +20,7 @@ enum State{
 geometry_msgs::Twist calculate_speeds(float robot_x, float robot_y, float robot_t, float goal_x, float goal_y,
 		float cruise_speed, bool backwards){
 	//Control constants
+	//alpha = 0.6548
 	float alpha = 0.6548;
 	float beta = 0.2;
 	float max_angular = 1.3;
@@ -36,6 +37,7 @@ geometry_msgs::Twist calculate_speeds(float robot_x, float robot_y, float robot_
 	result.linear.x  = cruise_speed * exp(-(angle_error * angle_error) / alpha);
 	result.linear.y  = 0;
 	result.angular.z = max_angular * (2 / (1 + exp(-angle_error / beta)) - 1);
+	//result.angular.z = 0;
 	return result;
 }
 
@@ -111,7 +113,7 @@ bool simpleMoveCallback(simple_move::SimpleMove::Request &req, simple_move::Simp
 				withDistance = false;
 				get_goal_position_wrt_odom(req.distance, req.angle, transformListener, goal_x, goal_y, goal_t);
 				state = State::SM_GOAL_POSE_ACCEL;
-				attempts = (int)((fabs(req.distance)+0.1)/0.4*60 + fabs(req.angle)/0.5*60);
+				attempts = (int)((fabs(req.distance)+0.1)/0.1*60 + fabs(req.angle)/0.5*60);
 				break;
 
 			case SM_GOAL_POSE_ACCEL:
@@ -126,7 +128,7 @@ bool simpleMoveCallback(simple_move::SimpleMove::Request &req, simple_move::Simp
 						state = State::SM_GOAL_POSE_CORRECT_ANGLE;
 						withDistance = true;
 					}else{
-						if(error < cruise_speed)
+						if(error < 0.06)
 							state = State::SM_GOAL_POSE_DECCEL;
 						else if(cruise_speed >= 0.4)
 							state = State::SM_GOAL_POSE_CRUISE;
@@ -145,7 +147,7 @@ bool simpleMoveCallback(simple_move::SimpleMove::Request &req, simple_move::Simp
 				error = sqrt((goal_x - robot_x)*(goal_x - robot_x) + (goal_y - robot_y)*(goal_y - robot_y));
 				std::cout << "errorCruise:" << error << std::endl;
 				//std::cout << "cruise_speed:" << cruise_speed << std::endl;
-				if(error < cruise_speed)
+				if(error < 0.2)
 					state = State::SM_GOAL_POSE_DECCEL;
 
 				twist = calculate_speeds(robot_x, robot_y, robot_t, goal_x, goal_y, cruise_speed, req.distance < 0);
@@ -172,8 +174,8 @@ bool simpleMoveCallback(simple_move::SimpleMove::Request &req, simple_move::Simp
 			case SM_GOAL_POSE_CORRECT_ANGLE:
 				get_robot_position_wrt_odom(transformListener, robot_x, robot_y, robot_t);
 				error = fabs(goal_t - robot_t);
-				std::cout << "Angle error:" << error << std::endl;
-				if(error < 0.045){
+				std::cout <<"Angle error:" << error << std::endl;
+				if(error < 0.03){
 					if(!withDistance)
 						state = State::SM_GOAL_POSE_FINISH;
 					else{
