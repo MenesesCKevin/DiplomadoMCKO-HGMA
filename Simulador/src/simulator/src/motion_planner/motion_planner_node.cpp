@@ -49,9 +49,11 @@ int main(int argc ,char **argv)
     int flagOnce;
     int est_sig;
     int cta_steps;
+    int grados = 45;
 
     int q_light;
     int q_inputs;
+    int q_inputs2;
 
     float max_advance;
     float max_turn_angle;
@@ -109,7 +111,7 @@ int main(int argc ,char **argv)
             q_light = quantize_light(light_readings); // function in ~/catkin_ws/src/simulator/src/motion_planner/motion_planner_utilities.h
 
             q_inputs = quantize_inputs(lidar_readings,params.laser_num_sensors,params.laser_value); // function in ~/catkin_ws/src/simulator/src/motion_planner/motion_planner_utilities.h
-
+            q_inputs2 = quantize_inputs2(lidar_readings,params.laser_num_sensors,params.laser_value);
             max_advance=params.robot_max_advance;
             max_turn_angle=params.robot_turn_angle;
 
@@ -439,7 +441,7 @@ int main(int argc ,char **argv)
                     flagOnce = 0;
                 }
                 user_obs(params.robot_x ,params.robot_y,intensity,light_readings, lidar_readings, params.laser_num_sensors,params.laser_value,
-                        q_light,q_inputs,&movements,&est_sig ,params.robot_max_advance ,params.robot_turn_angle);
+                        q_light,q_inputs2,&movements,&est_sig ,params.robot_max_advance ,params.robot_turn_angle,&grados);
                 break;
             case 12:
                 // it finds a path from the origen to a destination using depth first search
@@ -546,6 +548,53 @@ int main(int argc ,char **argv)
                 flg_result = CPotenciales(intensity,light_readings, lidar_readings, params.laser_num_sensors,params.laser_value,
                         q_light,q_inputs,&movements,&est_sig ,params.robot_max_advance ,params.robot_turn_angle);
                 if(flg_result == 1) stop();
+                break;
+            case 15:
+                if(flagOnce)
+                {
+                    for(i = 0; i < 200; i++)steps[i].node=-1;
+                    // it finds a path from the origen to a destination using the Dijkstra algorithm
+                    aestrella(params.robot_x ,params.robot_y ,params.light_x ,params.light_y ,params.world_name,steps);
+                    print_algorithm_graph (steps);
+                    i=0;
+                    final_x=params.light_x;
+                    final_y= params.light_y;
+                    set_light_position(steps[i].x,steps[i].y);
+                    printf("New Light %d: x = %f  y = %f \n",i,steps[i].x,steps[i].y);
+                    flagOnce = 0;
+                    flg_finish=0;
+                    est_sig = 0;
+                    movements.twist=0.0;
+                    movements.advance =0.0;
+                }
+                else
+                {
+                    flg_result=CPotenciales(intensity,light_readings, lidar_readings, params.laser_num_sensors,params.laser_value,
+                        q_light,q_inputs,&movements,&est_sig ,params.robot_max_advance ,params.robot_turn_angle);
+
+                    if(flg_result == 1)
+                    {
+                        if(flg_finish == 1) stop();
+                        else
+                        {
+                            if(steps[i].node != -1)
+                            {
+                                set_light_position(steps[i].x,steps[i].y);
+                                printf("New Light %d: x = %f  y = %f \n",i,steps[i].x,steps[i].y);
+                                printf("Node %d\n",steps[i].node);
+                                i++;
+                                //printf("type a number \n");
+                                //scanf("%d",&tmp);
+                            }
+                            else
+                            {
+                                set_light_position(final_x,final_y);
+                                printf("New Light %d: x = %f  y = %f \n",i,final_x,final_y);
+                                flg_finish=1;
+                            }
+                        }
+                    }
+                }
                 break;
 
 

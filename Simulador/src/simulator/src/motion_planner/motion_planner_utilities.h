@@ -281,8 +281,8 @@ int quantize_inputs(float *observations, int size, float laser_value  )
 
     for (int i = b; i < size ; i++ ) //izquierda
     {
-        if( observations[i] < laser_value  )
-        {
+        if( observations[i] < laser_value  ) //Si alguno de los sensores a la izquierda es menor que el valor de los lasers
+        {                                    //Entonces sumo 2 indicando que un obstaculo está a la izuqierda y me saldo del for
             iz = 2;
             break;
         }
@@ -298,6 +298,58 @@ int quantize_inputs(float *observations, int size, float laser_value  )
     }
 
     return iz + de ;
+}
+
+
+int quantize_inputs2(float *observations, int size, float laser_value  )
+{
+    /*
+      It quantizes the inputs
+    */
+    int a,b;
+    int iz,de,fr;
+    int j;
+
+    fr = iz = de = 0;
+
+    if (size % 3 == 2){
+        size -=2;
+    }
+    else if (size % 3 == 1){
+        size -=1;
+    }
+    a = size/3;
+    b = a*2;
+
+
+    for (int i = a; i < b ; i++ ) //enfrente
+    {
+        if( observations[i] < laser_value  )
+        {
+            fr = 3;
+            break;
+        }
+    }
+
+    for (int i = b; i < size ; i++ ) //izquierda
+    {
+        if( observations[i] < laser_value  ) //Si alguno de los sensores a la izquierda es menor que el valor de los lasers
+        {                                    //Entonces sumo 2 indicando que un obstaculo está a la izuqierda y me saldo del for
+            iz = 2;
+            break;
+        }
+    }
+
+    for (int i = 0; i < a ; i++ ) //derecha
+    {
+        if( observations[i] < laser_value  )
+        {
+            de = 1;
+            break;
+        }
+    }
+
+    return iz + de + fr ;
 }
 
 void laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
